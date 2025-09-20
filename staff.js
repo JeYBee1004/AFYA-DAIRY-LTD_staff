@@ -2,23 +2,13 @@
 const supabaseUrl = 'https://nowlgjwlsaotkcniiswy.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vd2xnandsc2FvdGtjbmlpc3d5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQyMjQ3ODMsImV4cCI6MjA2OTgwMDc4M30.b0qzgGVWqxRIoEK485QX1pnXFqIPziG7jIr0vyj1L1U'; 
 
-/**
- * antiInspect.js
- * Combines:
- *  - disable context menu (right click)
- *  - disable common devtools/view-source shortcuts (F12, Ctrl+Shift+I/J/C, Ctrl+U)
- *  - detect devtools by viewport changes and act (warn/block)
- *
- * NOTE: This only deters casual users. Does NOT prevent inspection by determined users.
- */
-
 (function antiInspect(window, document) {
   'use strict';
 
   // CONFIG: choose 'warn' or 'block' or 'log' when DevTools detected
-  const ON_DETECT_ACTION = 'block'; // 'block' | 'warn' | 'log'
-  const CHECK_INTERVAL_MS = 500; // how often to check for devtools open
-  const SIZE_THRESHOLD = 160; // px difference threshold likely when devtools is open
+  const ON_DETECT_ACTION = 'block'; 
+  const CHECK_INTERVAL_MS = 500; 
+  const SIZE_THRESHOLD = 160;
 
   // small helper to replace page content
   function blockPage(message) {
@@ -1239,7 +1229,7 @@ function logout() {
   if (confirm("Are you sure you want to logout?")) {
     showNotification("Logging out...", "warning");
     setTimeout(() => {
-      location.reload();
+      window.location.href = "index.html";
     }, 1000);
   }
 }
@@ -1319,3 +1309,4 @@ window.showProfile = showProfile;
 window.editProfile = editProfile;
 window.logout = logout;
 window.selectCow = selectCow;
+
