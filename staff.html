@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFYA DAIRY Staff System</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="staff.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                <div class="logo-text">
+                    <h2>AFYA DAIRY LTD</h2>
+                    <p>Staff System</p>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="#" class="nav-link active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="data-entry">
+                        <i class="fas fa-edit"></i>
+                        <span>Data Entry</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="data-summary">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Data Summary</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="staff-directory">
+                        <i class="fas fa-users"></i>
+                        <span>Staff Directory</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-page="profile">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Farm Management</h1>
+            </div>
+            
+            <div class="nav-center">
+                <span class="welcome-text">Welcome, <span id="currentUserName"></span></span>
+            </div>
+            
+            <div class="nav-right">
+                <div class="user-info" id="userInfo">
+                    <div class="user-details">
+                        <span class="user-name" id="headerUserName">KARANJA</span>
+                        <span class="user-role" id="headerUserRole">Senior Supervisor</span>
+                    </div>
+                    <div class="user-avatar" id="userAvatar">EK</div>
+                    
+                    <!-- User Dropdown Menu -->
+                    <div class="user-menu" id="userMenu">
+                        <div class="menu-item" onclick="showProfile()">
+                            <i class="fas fa-user"></i> Profile
+                        </div>
+                        <div class="menu-item logout-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="page-content">
+            <!-- Dashboard Page -->
+            <div class="page" id="dashboard-page" style="display: block;">
+                <div class="page-header">
+                    <h2>Dashboard</h2>
+                    <p class="page-description">Overview of farm operations</p>
+                </div>
+                
+                <!-- Overview Cards -->
+                <div class="overview-cards">
+                    <div class="overview-card milk-production">
+                        <i class="fas fa-tint"></i>
+                        <div class="card-content">
+                            <span class="number" id="milk-production">0L</span>
+                            <span class="label">Milk Production</span>
+                            <div class="trend">
+                                <i class="fas fa-arrow-up text-success"></i>
+                                <span class="trend-value">Today</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overview-card feed-consumption">
+                        <i class="fas fa-seedling"></i>
+                        <div class="card-content">
+                            <span class="number" id="feed-consumption">0KG</span>
+                            <span class="label">Feed Consumption</span>
+                            <div class="trend">
+                                <i class="fas fa-arrow-up text-success"></i>
+                                <span class="trend-value">Today</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overview-card total-cows">
+                        <i class="fas fa-cow"></i>
+                        <div class="card-content">
+                            <span class="number" id="total-cows">0</span>
+                            <span class="label">Active Cows</span>
+                            <div class="trend">
+                                <i class="fas fa-info-circle text-info"></i>
+                                <span class="trend-value">Registered</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overview-card health-alerts">
+                        <i class="fas fa-heart-pulse"></i>
+                        <div class="card-content">
+                            <span class="number" id="health-alerts">0</span>
+                            <span class="label">Health Records</span>
+                            <div class="trend">
+                                <i class="fas fa-check-circle text-success"></i>
+                                <span class="trend-value">Today</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list" id="activityList">
+                        <div class="activity-item">
+                            <div class="activity-icon info">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p><strong>System Ready</strong> - Start entering farm data</p>
+                                <span class="activity-time">Just now</span>
+                            </div>
+                            <div class="activity-value">Ready</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Entry Page -->
+            <div class="page" id="data-entry-page" style="display: none;">
+                <div class="page-header">
+                    <h2>Data Entry Forms</h2>
+                    <p class="page-description">Enter farm data quickly and accurately</p>
+                </div>
+                
+                <!-- Form Tabs -->
+                <div class="form-tabs">
+                    <button class="form-tab active" data-form="cow-registration">
+                        <i class="fas fa-plus"></i>
+                        Cow Registration
+                    </button>
+                    <button class="form-tab" data-form="milk-production">
+                        <i class="fas fa-tint"></i>
+                        Milk Production
+                    </button>
+                    <button class="form-tab" data-form="feeding">
+                        <i class="fas fa-seedling"></i>
+                        Feeding
+                    </button>
+                    <button class="form-tab" data-form="health">
+                        <i class="fas fa-heart"></i>
+                        Health
+                    </button>
+                </div>
+                
+                <!-- Cow Registration Form -->
+                <div class="form-container" id="cow-registration-form" style="display: block;">
+                    <div class="form-header">
+                        <h3>Cow Registration</h3>
+                        <p>Register new livestock in the system</p>
+                    </div>
+                    
+                    <form class="data-form" id="cowRegistrationForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cow-id">Cow ID *</label>
+                                <input type="text" id="cow-id" name="cowId" placeholder="COW001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cow-name">Cow Name</label>
+                                <input type="text" id="cow-name" name="cowName" placeholder="Bessie">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cow-breed">Breed *</label>
+                                <select id="cow-breed" name="breed" required>
+                                    <option value="">Select breed</option>
+                                    <option value="holstein">Holstein</option>
+                                    <option value="jersey">Jersey</option>
+                                    <option value="guernsey">Guernsey</option>
+                                    <option value="ayrshire">Ayrshire</option>
+                                    <option value="friesian">Friesian</option>
+                                    <option value="crossbreed">Crossbreed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cow-status">Status *</label>
+                                <select id="cow-status" name="status" required>
+                                    <option value="">Select status</option>
+                                    <option value="healthy">Healthy</option>
+                                    <option value="pregnant">Pregnant</option>
+                                    <option value="dry">Dry</option>
+                                    <option value="sick">Sick</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cow-birth-date">Birth Date</label>
+                                <input type="date" id="cow-birth-date" name="birthDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="cow-weight">Weight (kg)</label>
+                                <input type="number" id="cow-weight" name="weight" placeholder="450">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cow-notes">Additional Notes</label>
+                            <textarea id="cow-notes" name="notes" placeholder="Special characteristics, medical history, breeding information..."></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetCurrentForm()">Reset</button>
+                            <button type="submit" class="btn btn-primary">Register Cow</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Milk Production Form -->
+                <div class="form-container" id="milk-production-form" style="display: none;">
+                    <div class="form-header">
+                        <h3>Milk Production Entry</h3>
+                        <p>Record daily milk production data</p>
+                    </div>
+                    
+                    <form class="data-form" id="milkProductionForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="milk-cowId">Cow ID *</label>
+                                <input type="text" id="milk-cowId" name="cowId" placeholder="COW001" required>
+                                <div class="cow-suggestions" id="milk-cowSuggestions"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="milk-date">Date *</label>
+                                <input type="date" id="milk-date" name="date" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="milk-time">Milking Time *</label>
+                                <select id="milk-time" name="milkingTime" required>
+                                    <option value="">Select time</option>
+                                    <option value="morning">Morning (5:00 AM - 8:00 AM)</option>
+                                    <option value="afternoon">Afternoon (2:00 PM - 5:00 PM)</option>
+                                    <option value="evening">Evening (6:00 PM - 8:00 PM)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="milk-quantity">Quantity (Liters) *</label>
+                                <input type="number" id="milk-quantity" name="quantity" step="0.1" placeholder="25.5" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="milk-notes">Production Notes</label>
+                            <textarea id="milk-notes" name="notes" placeholder="Any observations about milk quality, cow behavior, or equipment issues..."></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetCurrentForm()">Reset</button>
+                            <button type="submit" class="btn btn-primary">Save Record</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Feeding Form -->
+                <div class="form-container" id="feeding-form" style="display: none;">
+                    <div class="form-header">
+                        <h3>Feeding Entry</h3>
+                        <p>Record feeding schedules and amounts</p>
+                    </div>
+                    
+                    <form class="data-form" id="feedingForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="feeding-cowId">Cow ID *</label>
+                                <input type="text" id="feeding-cowId" name="cowId" placeholder="COW001" required>
+                                <div class="cow-suggestions" id="feeding-cowSuggestions"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="feeding-date">Date *</label>
+                                <input type="date" id="feeding-date" name="date" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="feeding-time">Time Period *</label>
+                                <select id="feeding-time" name="timePeriod" required>
+                                    <option value="">Select feeding time</option>
+                                    <option value="morning">Morning (6:00 AM - 9:00 AM)</option>
+                                    <option value="midday">Midday (12:00 PM - 2:00 PM)</option>
+                                    <option value="evening">Evening (5:00 PM - 7:00 PM)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="feeding-type">Feed Type *</label>
+                                <select id="feeding-type" name="feedType" required>
+                                    <option value="">Select feed type</option>
+                                    <option value="hay">Hay</option>
+                                    <option value="silage">Silage</option>
+                                    <option value="concentrate">Concentrate</option>
+                                    <option value="pasture">Pasture</option>
+                                    <option value="supplements">Supplements</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="feeding-name">Feed Name</label>
+                                <input type="text" id="feeding-name" name="feedName" placeholder="e.g., Lucerne Hay, Dairy Meal">
+                            </div>
+                            <div class="form-group">
+                                <label for="feeding-quantity">Quantity (kg) *</label>
+                                <input type="number" id="feeding-quantity" name="quantity" step="0.1" placeholder="15.0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="feeding-notes">Feeding Notes</label>
+                            <textarea id="feeding-notes" name="notes" placeholder="Cow appetite, feed quality, any issues observed..."></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetCurrentForm()">Reset</button>
+                            <button type="submit" class="btn btn-primary">Save Feeding Record</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Health Form -->
+                <div class="form-container" id="health-form" style="display: none;">
+                    <div class="form-header">
+                        <h3>Health Check Entry</h3>
+                        <p>Document health observations and treatments</p>
+                    </div>
+                    
+                    <form class="data-form" id="healthForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="health-cowId">Cow ID *</label>
+                                <input type="text" id="health-cowId" name="cowId" placeholder="COW001" required>
+                                <div class="cow-suggestions" id="health-cowSuggestions"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="health-date">Date *</label>
+                                <input type="date" id="health-date" name="date" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="health-status">Health Status *</label>
+                                <select id="health-status" name="healthStatus" required>
+                                    <option value="">Select health status</option>
+                                    <option value="healthy">Healthy</option>
+                                    <option value="sick">Sick</option>
+                                    <option value="injured">Injured</option>
+                                    <option value="pregnant">Pregnant</option>
+                                    <option value="dry">Dry</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="health-symptoms">Symptoms</label>
+                                <input type="text" id="health-symptoms" name="symptoms" placeholder="e.g., Coughing, Limping, Loss of appetite">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="health-treatment">Treatment Given</label>
+                                <input type="text" id="health-treatment" name="treatment" placeholder="e.g., Antibiotics, Vitamins">
+                            </div>
+                            <div class="form-group">
+                                <label for="health-vet">Veterinarian</label>
+                                <input type="text" id="health-vet" name="veterinarian" placeholder="Dr. Smith">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="health-notes">Health Notes</label>
+                            <textarea id="health-notes" name="notes" placeholder="Detailed observations, follow-up instructions, medication schedule..."></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetCurrentForm()">Reset</button>
+                            <button type="submit" class="btn btn-primary">Save Health Record</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Data Summary Page -->
+            <div class="page" id="data-summary-page" style="display: none;">
+                <div class="page-header">
+                    <h2>Data Summary</h2>
+                    <p class="page-description">Summary of recorded data</p>
+                </div>
+                
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <h3>Today's Entries</h3>
+                        <div class="summary-stats">
+                            <div class="stat">
+                                <span class="stat-number" id="milkRecords">0</span>
+                                <span class="stat-label">Milk Records</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number" id="feedingRecords">0</span>
+                                <span class="stat-label">Feeding Records</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number" id="healthRecords">0</span>
+                                <span class="stat-label">Health Checks</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Performance Metrics</h3>
+                        <div class="performance-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Data Accuracy</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 96%"></div>
+                                </div>
+                                <span class="metric-value">96%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Completion Rate</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 89%"></div>
+                                </div>
+                                <span class="metric-value">89%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Response Time</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 92%"></div>
+                                </div>
+                                <span class="metric-value">92%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Records -->
+                <div class="recent-records">
+                    <h3>Recent Records</h3>
+                    <div class="records-table" id="recentRecordsTable">
+                        <p class="no-data">No records found. Start by entering some data!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Staff Directory Page -->
+            <div class="page" id="staff-directory-page" style="display: none;">
+                <div class="page-header">
+                    <h2>Staff Directory</h2>
+                    <p class="page-description">Manage team members</p>
+                </div>
+                
+                <div class="staff-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search staff..." id="staffSearch" oninput="filterStaff()">
+                    </div>
+                    <button class="btn btn-primary" onclick="showAddStaffModal()">
+                        <i class="fas fa-plus"></i> Add Staff
+                    </button>
+                </div>
+                
+                <div class="staff-grid" id="staffGrid">
+                    <!-- Staff cards will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Profile Page -->
+            <div class="page" id="profile-page" style="display: none;">
+                <div class="page-header">
+                    <h2>Profile</h2>
+                    <p class="page-description">Manage your profile</p>
+                </div>
+                
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profileAvatar">EK</div>
+                        <div class="profile-info">
+                            <h3 id="profileName">Ephraim Karanja</h3>
+                            <p id="profileRole">Senior Farm Hand</p>
+                            <div class="profile-badges">
+                                <span class="badge active">Active</span>
+                                <span class="badge verified">Verified</span>
+                            </div>
+                        </div>
+                        <button class="edit-profile-btn" onclick="editProfile()">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                    </div>
+                    <div class="profile-details">
+                        <div class="detail-section">
+                            <h4>Personal Information</h4>
+                            <div class="detail-row">
+                                <span class="detail-label">Username:</span>
+                                <span class="detail-value" id="profileUsername">E.karanja</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Email:</span>
+                                <span class="detail-value" id="profileEmail">ephraim.karanja@afyadairy.com</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Role:</span>
+                                <span class="detail-value" id="profileRoleDetail">Senior Farm Hand</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Join Date:</span>
+                                <span class="detail-value" id="profileJoinDate">January 15, 2020</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h4>Performance Metrics</h4>
+                            <div class="performance-grid">
+                                <div class="performance-item">
+                                    <span class="performance-label">Data Entries</span>
+                                    <span class="performance-value" id="totalEntries">0</span>
+                                </div>
+                                <div class="performance-item">
+                                    <span class="performance-label">Accuracy Rate</span>
+                                    <span class="performance-value">96.2%</span>
+                                </div>
+                                <div class="performance-item">
+                                    <span class="performance-label">Tasks Completed</span>
+                                    <span class="performance-value" id="tasksCompleted">0</span>
+                                </div>
+                                <div class="performance-item">
+                                    <span class="performance-label">Rating</span>
+                                    <span class="performance-value">4.8/5</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="notification-toast" id="notificationToast">
+        <div class="toast-content">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage">Success message</span>
+        </div>
+    </div>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- Add Staff Modal -->
+    <div class="modal" id="addStaffModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Staff Member</h3>
+                <button class="close-btn" onclick="closeModal('addStaffModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="modal-form" onsubmit="addStaff(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="staff-name">Full Name *</label>
+                        <input type="text" id="staff-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="staff-role">Role *</label>
+                        <select id="staff-role" name="role" required>
+                            <option value="">Select role</option>
+                            <option value="Farm Hand">Farm Hand</option>
+                            <option value="Senior Farm Hand">Senior Farm Hand</option>
+                            <option value="Farm Assistant">Farm Assistant</option>
+                            <option value="Veterinary Assistant">Veterinary Assistant</option>
+                            <option value="Supervisor">Supervisor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="staff-phone">Phone Number *</label>
+                        <input type="tel" id="staff-phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="staff-email">Email</label>
+                        <input type="email" id="staff-email" name="email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="staff-department">Department *</label>
+                        <select id="staff-department" name="department" required>
+                            <option value="">Select department</option>
+                            <option value="Dairy Operations">Dairy Operations</option>
+                            <option value="Feeding & Care">Feeding & Care</option>
+                            <option value="Health & Wellness">Health & Wellness</option>
+                            <option value="Maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="staff-start-date">Start Date *</label>
+                        <input type="date" id="staff-start-date" name="startDate" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addStaffModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Staff Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="staff.js"></script>
+</body>
+</html>
