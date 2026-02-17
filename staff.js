@@ -1,11 +1,9 @@
-// Supabase Client Setup
 const supabaseUrl = 'https://nowlgjwlsaotkcniiswy.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vd2xnandsc2FvdGtjbmlpc3d5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQyMjQ3ODMsImV4cCI6MjA2OTgwMDc4M30.b0qzgGVWqxRIoEK485QX1pnXFqIPziG7jIr0vyj1L1U'; 
 
 (function antiInspect(window, document) {
   'use strict';
 
-  // CONFIG: choose 'warn' or 'block' or 'log' when DevTools detected
   const ON_DETECT_ACTION = 'block'; 
   const CHECK_INTERVAL_MS = 500; 
   const SIZE_THRESHOLD = 160;
@@ -1309,4 +1307,5 @@ window.showProfile = showProfile;
 window.editProfile = editProfile;
 window.logout = logout;
 window.selectCow = selectCow;
+
 
